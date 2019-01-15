@@ -3,7 +3,7 @@ import ReactDOM from 'react-dom';
 import {BrowserRouter as Router} from 'react-router-dom'
 import {Provider} from 'react-redux';
 import {applyMiddleware,createStore} from 'redux';
-import rootReducer from './reducer'
+import rootReducer from './reducers'
 
 import App from './components/app';
 
