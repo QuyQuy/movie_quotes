@@ -1,5 +1,7 @@
 import React,{Component, Fragment} from 'react';
+import { connect } from 'react-redux'
 import {Link} from 'react-router-dom';
+import {signOut} from '../../actions'
 import './nav.scss';
 import SideNav from './side_nav'
 
@@ -42,30 +44,31 @@ class Nav extends Component  {
     }
     buildLink(link) {
         return (
-            <li>
+            <li key={link.to}>
                 <Link to={link.to}>{link.text}</Link>
             </li>
         )
     }
     handleSignOut = () => {
         console.log('sig nout button clicked')
+
+        this.props.signOut();
     }
     renderLinks() {
         const {authLinks, commonLinks, noAuthLinks} = this.state;
-        const auth = true;
+        const { auth } = this.props;
 
         let links = [...commonLinks];
 
         if(auth) {
             links = [...links, ...authLinks].map(this.buildLink);
-
             links.push(
                 <li className='sign-out' key='sign-out'>
-                    <button onClick="this.handleSignOut" className='btn blue'>Sign Out</button>
+                    <button onClick={this.handleSignOut} className='btn blue'>Sign Out</button>
                 </li>
             )
         } else {
-            links = [...links, ...noAuthLinks]
+            links = [...links, ...noAuthLinks].map(this.buildLink)
         }
         return links;
     }
@@ -90,4 +93,11 @@ class Nav extends Component  {
     }
 }
 
-export default Nav
+function mapStateToProps(state) {
+    return {
+        auth: state.user.auth
+    }
+}
+export default connect(mapStateToProps, {
+    signOut: signOut
+})(Nav);
